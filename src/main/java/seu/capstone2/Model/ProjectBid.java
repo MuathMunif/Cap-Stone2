@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 
 @Data
@@ -45,20 +45,20 @@ public class ProjectBid {
     @Column(columnDefinition = "DATE not null")
     private LocalDate deadline;
 
-    // OPEN, CLOSED, AWARDED
+
     @NotEmpty(message = "The status must be not empty")
     @Pattern(regexp = "OPEN|CLOSED|AWARDED", message = "Status must be 'OPEN', 'CLOSED' or 'AWARDED'")
     @Column(columnDefinition = "varchar(10) not null")
     private String status = "OPEN";
 
-    // Manual FKs
+
     @NotNull(message = "companyId is required")
     @Column(columnDefinition = "int not null")
-    private Integer companyId;       // Must exist and be type OWNER
+    private Integer companyId;
 
     @NotNull(message = "createdByUserId is required")
     @Column(columnDefinition = "int not null")
-    private Integer createdByUserId; // Must exist and be role OWNER
+    private Integer createdByUserId;
 
     @CreationTimestamp
     private LocalDate createdAt = LocalDate.now();

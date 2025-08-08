@@ -11,4 +11,6 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
     boolean existsByCrNumber(String crNumber);
 
+    boolean existsByCreatedByUserId(Integer createdByUserId);
+
 }

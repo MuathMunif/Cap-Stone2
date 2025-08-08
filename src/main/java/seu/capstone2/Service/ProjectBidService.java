@@ -32,6 +32,9 @@ public class ProjectBidService {
         if (user == null) {
             throw new ApiExcpection("User not found");
         }
+        if (!user.getRole().equals("OWNER")) {
+            throw new ApiExcpection("You are Contractor you can't make project bids");
+        }
 
         projectBidRepository.save(projectBid);
     }

@@ -45,5 +45,42 @@ public class BidController {
         bidService.deleteBid(id);
         return ResponseEntity.status(200).body(new ApiResponse("bid deleted successfully"));
     }
+    // CRUD done
+
+
+
+    @GetMapping("/get-bids-by-contractorId/{contractorId}")
+    public ResponseEntity<?> getBidsByContractorId(@PathVariable Integer contractorId) {
+        return ResponseEntity.status(200).body(bidService.getBidsByContractorId(contractorId));
+    }
+
+    @GetMapping("/get-bids-by-project-bidId/{projectBidId}")
+    public ResponseEntity<?> getBidsByProjectBidId(@PathVariable Integer projectBidId) {
+        return ResponseEntity.status(200).body(bidService.getAllBidsByProjectBidId(projectBidId));
+    }
+
+
+    @PutMapping("/accept-bid/{bidId}/{userId}")
+    public ResponseEntity<?> acceptBid(@PathVariable Integer bidId, @PathVariable Integer userId) {
+        bidService.acceptBid(bidId,userId);
+        return ResponseEntity.status(200).body(new ApiResponse("bid accepted"));
+    }
+
+    @PutMapping("/reject-bid/{bidId}/{userId}")
+    public ResponseEntity<?> rejectBid(@PathVariable Integer bidId, @PathVariable Integer userId) {
+        bidService.rejectBid(bidId,userId);
+        return ResponseEntity.status(200).body(new ApiResponse("bid rejected"));
+    }
+
+
+    @GetMapping("/get-bid-by-status/{status}")
+    public ResponseEntity<?> getBidByStatus(@PathVariable String status) {
+        return ResponseEntity.status(200).body(bidService.getAllBidsByStatus(status));
+    }
+
+    @GetMapping("/get-bids-by-projectId-status/{projectId}/{status}")
+    public ResponseEntity<?> getBidsByProjectIdAndStatus(@PathVariable Integer projectId, @PathVariable String status) {
+        return ResponseEntity.status(200).body(bidService.getBidsByProjectBidIdAndStatus(projectId , status));
+    }
 
 }

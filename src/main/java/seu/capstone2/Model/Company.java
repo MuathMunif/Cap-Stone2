@@ -27,7 +27,7 @@ public class Company {
     private String name;
 
 
-    @NotEmpty(message = "The company type must be not empty")
+
     @Pattern(regexp = "OWNER|CONTRACTOR", message = "The company type must be 'OWNER' or 'CONTRACTOR'")
     @Column(columnDefinition = "varchar(15) not null")
     private String type;

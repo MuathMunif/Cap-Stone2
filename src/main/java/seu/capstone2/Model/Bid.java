@@ -5,9 +5,8 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
 
 @Data
@@ -20,18 +19,18 @@ public class Bid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Manual FKs
+
     @NotNull(message = "projectBidId is required")
     @Column(columnDefinition = "int not null")
     private Integer projectBidId;
 
     @NotNull(message = "contractorCompanyId is required")
     @Column(columnDefinition = "int not null")
-    private Integer contractorCompanyId; // Must exist and be type CONTRACTOR
+    private Integer contractorCompanyId;
 
     @NotNull(message = "submittedByUserId is required")
     @Column(columnDefinition = "int not null")
-    private Integer submittedByUserId;   // Must exist and be role CONTRACTOR
+    private Integer submittedByUserId;
 
     @NotNull(message = "amount is required")
     @Positive( message = "amount must be greater than 0")
@@ -49,7 +48,7 @@ public class Bid {
     @Column(columnDefinition = "varchar(3000) not null")
     private String description;
 
-    // PENDING, ACCEPTED, REJECTED
+
     @NotEmpty(message = "status must be not empty") //todo check
     @Pattern(regexp = "PENDING|ACCEPTED|REJECTED", message = "Status must be 'PENDING', 'ACCEPTED' or 'REJECTED'")
     @Column(columnDefinition = "varchar(10) not null")

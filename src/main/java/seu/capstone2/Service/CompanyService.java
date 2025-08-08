@@ -25,6 +25,9 @@ public class CompanyService {
         if (user == null) {
             throw new ApiExcpection("User not found");
         }
+        if (companyRepository.existsByCreatedByUserId(company.getCreatedByUserId())) {
+            throw new ApiExcpection("User already has a company");
+        }
         if (user.getRole().equals("CONTRACTOR")) {
             company.setType("CONTRACTOR");
         } else if (user.getRole().equals("OWNER")) {
