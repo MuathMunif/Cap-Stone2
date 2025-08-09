@@ -1,10 +1,7 @@
 package seu.capstone2.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -51,6 +48,10 @@ public class Company {
     @NotNull(message = "createdByUserId is required")
     @Column(columnDefinition = "int not null")
     private Integer createdByUserId;
+
+    @NotEmpty(message = "The email must be not empty")
+    @Email(message = "Invalid email")
+    private String email;
 
     @CreationTimestamp
     private LocalDate createdAt = LocalDate.now();

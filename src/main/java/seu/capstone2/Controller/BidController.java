@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import seu.capstone2.Api.ApiResponse;
 import seu.capstone2.Model.Bid;
 import seu.capstone2.Service.BidService;
+import seu.capstone2.Service.ContractEmailService;
+
 
 import java.util.Objects;
 
@@ -16,6 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BidController {
     private final BidService bidService;
+    private final ContractEmailService contractEmailService;
 
     @GetMapping("/get")
     public ResponseEntity<?> getAllBids() {
@@ -83,4 +86,11 @@ public class BidController {
         return ResponseEntity.status(200).body(bidService.getBidsByProjectBidIdAndStatus(projectId , status));
     }
 
+
+    //Extra and test
+    @PutMapping("/accept-email/{bidId}/{actingUserId}")
+    public ResponseEntity<?> acceptAndEmailed(@PathVariable Integer bidId,@PathVariable Integer actingUserId) {
+        bidService.acceptBidAndEmail(bidId, actingUserId);
+        return ResponseEntity.status(200).body(new ApiResponse("bid accepted and emailed"));
+    }
 }

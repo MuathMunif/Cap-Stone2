@@ -22,6 +22,7 @@ public class BidService {
     private final ProjectBidRepository projectBidRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final ContractEmailService contractEmailService;
 
 
     public List<Bid> getAllBids() {
@@ -73,6 +74,9 @@ public class BidService {
         if (oldBid == null) {
             throw new ApiExcpection("Bid not found");
         }
+        if (!"PENDING".equals(oldBid.getStatus())) {
+            throw new ApiExcpection("Only bids with status 'PENDING' can be deleted");
+        }
         bidRepository.delete(oldBid);
     }
 
@@ -80,6 +84,10 @@ public class BidService {
 
     //find All bids by Contractor company Id
     public List<Bid> getBidsByContractorId(Integer ContractorId) {
+        Company company = companyRepository.findCompanyById(ContractorId);
+        if (company == null) {
+            throw new ApiExcpection("Company not found");
+        }
         List<Bid> bids = bidRepository.findBidByContractorCompanyId(ContractorId);
         if (bids.isEmpty()) {
             throw new ApiExcpection("No bids found");
@@ -90,6 +98,10 @@ public class BidService {
 
     // find All bids by project Bid ID
     public List<Bid> getAllBidsByProjectBidId(Integer projectBidId) {
+        ProjectBid projectBid = projectBidRepository.findProjectBidById(projectBidId);
+        if (projectBid == null) {
+            throw new ApiExcpection("Project bid not found");
+        }
         List<Bid> bids = bidRepository.findBidByProjectBidId(projectBidId);
         if (bids.isEmpty()) {
             throw new ApiExcpection("No bids found");
@@ -124,13 +136,14 @@ public class BidService {
             throw new ApiExcpection("You are not authorized to accept this bid");
         }
         if (projectBid.getDeadline().isBefore(java.time.LocalDate.now())) {
+            projectBid.setStatus("CLOSED"); // todo check
             throw new ApiExcpection("ProjectBid deadline has passed");
         }
         if (!"OPEN".equals(projectBid.getStatus())) {
             throw new ApiExcpection("ProjectBid is not OPEN");
         }
         if (!"PENDING".equals(bid.getStatus())) {
-            throw new ApiExcpection("ProjectBid is not PENDING");
+            throw new ApiExcpection("Bid is not PENDING");
         }
         bid.setStatus("ACCEPTED");
         bidRepository.save(bid);
@@ -174,5 +187,20 @@ public class BidService {
             throw new ApiExcpection("No bids found");
         }
         return bids;
+    }
+
+
+    //Extra test accept and send email
+    public void acceptBidAndEmail(Integer bidId, Integer actingUserId) {
+        acceptBid(bidId, actingUserId);
+        Bid bid = bidRepository.findBidById(bidId);
+        if (bid == null) {
+            throw new ApiExcpection("Bid not found");
+        }
+        Company contractor = companyRepository.findCompanyById(bid.getContractorCompanyId());
+        if (contractor == null) {
+            throw new ApiExcpection("Contractor company not found");
+        }
+        contractEmailService.emailContractPdf(bidId, contractor.getEmail());
     }
 }

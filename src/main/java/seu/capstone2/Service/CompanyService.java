@@ -64,4 +64,14 @@ public class CompanyService {
 
 
 
+    public List<Company> findAllCompaniesByUserId(Integer userId) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new ApiExcpection("User not found");
+        }
+        return companyRepository.getAllCompanyByCreatedByUserId(userId);
+    }
+
+
+
 }

@@ -46,4 +46,10 @@ public class ProjectBidController {
         return ResponseEntity.status(200).body(new ApiResponse("Project bid deleted successfully"));
     }
 
+
+    @GetMapping("/get-all-projectBid-by-companyId/{companyId}")
+    public ResponseEntity<?> getAllProjectBidByCompanyId(@PathVariable Integer companyId) {
+        return ResponseEntity.status(200).body(projectBidService.getProjectBidByCompanyId(companyId));
+    }
+
 }

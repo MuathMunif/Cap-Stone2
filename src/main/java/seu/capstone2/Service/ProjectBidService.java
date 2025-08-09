@@ -61,4 +61,13 @@ public class ProjectBidService {
         }
         projectBidRepository.delete(projectBidToDelete);
     }
+
+    //Extra
+    public List<ProjectBid> getProjectBidByCompanyId(Integer companyId) {
+        Company company = companyRepository.findCompanyById(companyId);
+        if (company == null) {
+            throw new ApiExcpection("Company not found");
+        }
+        return projectBidRepository.getProjectBidByCompanyId(companyId);
+    }
 }

@@ -46,4 +46,11 @@ public class CompanyController {
         companyService.deleteCompany(id);
         return ResponseEntity.status(200).body(new ApiResponse("Company deleted successfully"));
     }
+
+
+    @GetMapping("/get-company-by-userId/{userId}") //todo test
+    public ResponseEntity<?> getCompanyByUserId(@PathVariable Integer userId){
+        return ResponseEntity.status(200).body(companyService.findAllCompaniesByUserId(userId));
+    }
+
 }
