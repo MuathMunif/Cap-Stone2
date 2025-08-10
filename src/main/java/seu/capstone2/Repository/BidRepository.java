@@ -11,9 +11,8 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 
     Bid findBidById(Integer id);
 
-    boolean existsBidsByProjectBidIdAndSubmittedByUserId(Integer projectBidId, Integer userId);
 
-    List<Bid> findBidByContractorCompanyId(Integer customerId);
+    List<Bid> findBidByContractorId(Integer contractorId);
 
     List<Bid> findBidByProjectBidId(Integer projectBidId);
 
@@ -21,6 +20,8 @@ public interface BidRepository extends JpaRepository<Bid, Integer> {
 
     List<Bid> findBidByProjectBidIdAndStatusContains(Integer projectBidId, String status);
 
+    boolean existsByContractorIdAndStatus(Integer contractorId, String status);
 
+    boolean existsByProjectBidIdAndContractorId(Integer projectBidId, Integer contractorId);
 
 }

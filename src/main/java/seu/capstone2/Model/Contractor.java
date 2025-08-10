@@ -1,7 +1,10 @@
 package seu.capstone2.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +16,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Company {
+public class Contractor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotEmpty(message = "The company name must be not empty")
-    @Size(min = 4, max = 120, message = "The company name length must be between 4 and 120")
+    @NotEmpty(message = "The contractor name must be not empty")
+    @Size(min = 4, max = 120)
     @Column(columnDefinition = "varchar(120) not null")
     private String name;
 
@@ -29,7 +33,7 @@ public class Company {
     private String crNumber;
 
     @NotEmpty(message = "The city must be not empty")
-    @Size(min = 2, max = 50, message = "The city length must be between 2 and 50")
+    @Size(min = 2, max = 50)
     @Column(columnDefinition = "varchar(50) not null")
     private String city;
 

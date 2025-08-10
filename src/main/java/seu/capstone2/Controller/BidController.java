@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import seu.capstone2.Api.ApiResponse;
 import seu.capstone2.Model.Bid;
 import seu.capstone2.Service.BidService;
-import seu.capstone2.Service.ContractEmailService;
 
 
 import java.util.Objects;
@@ -18,7 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BidController {
     private final BidService bidService;
-    private final ContractEmailService contractEmailService;
+
 
     @GetMapping("/get")
     public ResponseEntity<?> getAllBids() {
@@ -62,15 +61,15 @@ public class BidController {
     }
 
 
-    @PutMapping("/accept-bid/{bidId}/{userId}")
-    public ResponseEntity<?> acceptBid(@PathVariable Integer bidId, @PathVariable Integer userId) {
-        bidService.acceptBid(bidId,userId);
+    @PutMapping("/accept-bid/{bidId}/{actingCompanyId}")
+    public ResponseEntity<?> acceptBid(@PathVariable Integer bidId, @PathVariable Integer actingCompanyId) {
+        bidService.acceptBid(bidId,actingCompanyId);
         return ResponseEntity.status(200).body(new ApiResponse("bid accepted"));
     }
 
-    @PutMapping("/reject-bid/{bidId}/{userId}")
-    public ResponseEntity<?> rejectBid(@PathVariable Integer bidId, @PathVariable Integer userId) {
-        bidService.rejectBid(bidId,userId);
+    @PutMapping("/reject-bid/{bidId}/{actingCompanyId}")
+    public ResponseEntity<?> rejectBid(@PathVariable Integer bidId, @PathVariable Integer actingCompanyId) {
+        bidService.rejectBid(bidId,actingCompanyId);
         return ResponseEntity.status(200).body(new ApiResponse("bid rejected"));
     }
 
@@ -87,9 +86,9 @@ public class BidController {
 
 
 
-    @PutMapping("/accept-email/{bidId}/{actingUserId}")
-    public ResponseEntity<?> acceptAndEmailed(@PathVariable Integer bidId,@PathVariable Integer actingUserId) {
-        bidService.acceptBidAndEmail(bidId, actingUserId);
+    @PutMapping("/accept-email/{bidId}/{actingCompanyId}")
+    public ResponseEntity<?> acceptAndEmailed(@PathVariable Integer bidId,@PathVariable Integer actingCompanyId) {
+        bidService.acceptBidAndEmail(bidId, actingCompanyId);
         return ResponseEntity.status(200).body(new ApiResponse("bid accepted and emailed"));
     }
 }

@@ -12,11 +12,4 @@ public interface CompanyRepository extends JpaRepository<Company, Integer> {
 
     Company findCompanyById(Integer id);
 
-    boolean existsByCrNumber(String crNumber);
-
-    boolean existsByCreatedByUserId(Integer createdByUserId);
-
-    @Query("select u from Company u where u.createdByUserId = ?1")
-    List<Company>  getAllCompanyByCreatedByUserId(Integer createdByUserId);
-
 }

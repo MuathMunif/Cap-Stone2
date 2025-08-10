@@ -4,56 +4,40 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import seu.capstone2.Api.ApiExcpection;
 import seu.capstone2.Model.Company;
-import seu.capstone2.Model.User;
 import seu.capstone2.Repository.CompanyRepository;
 import seu.capstone2.Repository.ProjectBidRepository;
-import seu.capstone2.Repository.UserRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
+
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
     private final ProjectBidRepository projectBidRepository;
+
+
 
     public List<Company> findAllCompanies() {
         return companyRepository.findAll();
     }
 
-    public void addCompany(Company company) { //todo check
-        User user = userRepository.findUserById(company.getCreatedByUserId());
-        if (user == null) {
-            throw new ApiExcpection("User not found");
-        }
-        if (companyRepository.existsByCreatedByUserId(company.getCreatedByUserId())) {
-            throw new ApiExcpection("User already has a company");
-        }
-        if (user.getRole().equals("CONTRACTOR")) {
-            company.setType("CONTRACTOR");
-        } else if (user.getRole().equals("OWNER")) {
-            company.setType("OWNER");
-        } else {
-            throw new ApiExcpection("Invalid user role for creating a company");
-        }
 
-        if (companyRepository.existsByCrNumber(company.getCrNumber())) {
-            throw new ApiExcpection("CR number already exists");
-        }
+
+    public void addCompany(Company company) {
         companyRepository.save(company);
     }
 
-    public void updateCompany(Integer id ,Company company) {
-        Company oldCompany = companyRepository.findCompanyById(id);
-        if (oldCompany == null) {
+    public void updateCompany(Integer id, Company company) {
+        Company old = companyRepository.findCompanyById(id);
+        if (old == null) {
             throw new ApiExcpection("Company not found");
         }
-        oldCompany.setName(company.getName());
-        oldCompany.setCity(company.getCity());
-        oldCompany.setPhone(company.getPhone());
-        oldCompany.setCrNumber(company.getCrNumber());
-        companyRepository.save(oldCompany);
+        old.setName(company.getName());
+        old.setCity(company.getCity());
+        old.setPhone(company.getPhone());
+        old.setEmail(company.getEmail());
+        companyRepository.save(old);
     }
 
     public void deleteCompany(Integer id) {
@@ -61,23 +45,11 @@ public class CompanyService {
         if (company == null) {
             throw new ApiExcpection("Company not found");
         }
-        boolean hasActiveProjects = projectBidRepository.existsByCompanyIdAndStatus(id, "AWARDED");
+        boolean hasActiveProjects = projectBidRepository.existsByCompanyIdAndStatus(id,"AWARDED");
         if (hasActiveProjects) {
-            throw new ApiExcpection("you can't delete a project because you have active projects");
+            throw new ApiExcpection("Cannot delete a company with active projects");
         }
+
         companyRepository.delete(company);
     }
-
-
-
-    public List<Company> findAllCompaniesByUserId(Integer userId) {
-        User user = userRepository.findUserById(userId);
-        if (user == null) {
-            throw new ApiExcpection("User not found");
-        }
-        return companyRepository.getAllCompanyByCreatedByUserId(userId);
-    }
-
-
-
 }

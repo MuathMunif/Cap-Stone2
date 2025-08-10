@@ -20,43 +20,35 @@ public class Bid {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
-    @NotNull(message = "projectBidId is required")
+    @NotNull(message = "The projectBidId must be not null")
     @Column(columnDefinition = "int not null")
     private Integer projectBidId;
 
-    @NotNull(message = "contractorCompanyId is required")
+    @NotNull(message = "The contractorId must be not null")
     @Column(columnDefinition = "int not null")
-    private Integer contractorCompanyId;
+    private Integer contractorId;
 
-    @NotNull(message = "submittedByUserId is required")
-    @Column(columnDefinition = "int not null")
-    private Integer submittedByUserId;
-
-    @NotNull(message = "amount is required")
-    @Positive( message = "amount must be greater than 0")
+    @NotNull(message = "The amount must be not null")
+    @Positive(message = "The amount must be valid number")
     @Column(columnDefinition = "double not null")
     private Double amount;
 
-    @NotNull(message = "durationInDays is required")
-    @Min(value = 1, message = "durationInDays must be at least 1")
-    @Max(value = 3650, message = "durationInDays is too large")
+    @NotNull(message = "The durationInDays must be not null")
+    @Min(1) @Max(3650)
     @Column(columnDefinition = "int not null")
     private Integer durationInDays;
 
-    @NotEmpty(message = "description must be not empty")
-    @Size(min = 10, max = 3000, message = "description length must be more than 9")
+    @NotEmpty(message = "The description must be not empty")
+    @Size(min = 10, max = 3000)
     @Column(columnDefinition = "varchar(3000) not null")
     private String description;
 
 
-    @NotEmpty(message = "status must be not empty") //todo check
-    @Pattern(regexp = "PENDING|ACCEPTED|REJECTED", message = "Status must be 'PENDING', 'ACCEPTED' or 'REJECTED'")
+    @Pattern(regexp = "PENDING|ACCEPTED|REJECTED")
     @Column(columnDefinition = "varchar(10) not null")
     private String status = "PENDING";
 
-
-    @Column(columnDefinition = "date")
     @CreationTimestamp
+    @Column(columnDefinition = "DATE")
     private LocalDate submissionDate;
 }

@@ -11,9 +11,11 @@ import seu.capstone2.Api.ApiExcpection;
 import seu.capstone2.Model.Bid;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Model.ProjectBid;
+import seu.capstone2.Model.Contractor;
 import seu.capstone2.Repository.BidRepository;
 import seu.capstone2.Repository.CompanyRepository;
 import seu.capstone2.Repository.ProjectBidRepository;
+import seu.capstone2.Repository.ContractorRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -25,6 +27,7 @@ public class ContractService {
     private final BidRepository bidRepository;
     private final ProjectBidRepository projectBidRepository;
     private final CompanyRepository companyRepository;
+    private final ContractorRepository contractorRepository;
 
     public byte[] generateContractPdf(Integer acceptedBidId) {
         Bid bid = bidRepository.findBidById(acceptedBidId);
@@ -35,8 +38,8 @@ public class ContractService {
         if (pb == null) throw new ApiExcpection("ProjectBid not found");
 
         Company owner = companyRepository.findCompanyById(pb.getCompanyId());
-        Company contractor = companyRepository.findCompanyById(bid.getContractorCompanyId());
-        if (owner == null || contractor == null) throw new ApiExcpection("Company data missing");
+        Contractor contractor = contractorRepository.findContractorById(bid.getContractorId());
+        if (owner == null || contractor == null) throw new ApiExcpection("Company/Contractor data missing");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 36, 36, 36, 36);

@@ -5,43 +5,34 @@ import org.springframework.stereotype.Service;
 import seu.capstone2.Api.ApiExcpection;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Model.ProjectBid;
-import seu.capstone2.Model.User;
 import seu.capstone2.Repository.CompanyRepository;
 import seu.capstone2.Repository.ProjectBidRepository;
-import seu.capstone2.Repository.UserRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectBidService {
+
     private final ProjectBidRepository projectBidRepository;
-    private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
 
     public List<ProjectBid> getAllProjectBids() {
         return projectBidRepository.findAll();
     }
 
+
     public void addProjectBid(ProjectBid projectBid) {
         Company company = companyRepository.findCompanyById(projectBid.getCompanyId());
-        User user = userRepository.findUserById(projectBid.getCreatedByUserId());
         if (company == null) {
             throw new ApiExcpection("Company not found");
         }
-        if (user == null) {
-            throw new ApiExcpection("User not found");
-        }
-        if (!user.getRole().equals("OWNER")) {
-            throw new ApiExcpection("You are Contractor you can't make project bids");
-        }
-
         projectBidRepository.save(projectBid);
     }
 
-
-    public void updateProjectBid(Integer id ,ProjectBid projectBid) {
+    public void updateProjectBid(Integer id, ProjectBid projectBid) {
         ProjectBid projectBidToUpdate = projectBidRepository.findProjectBidById(id);
         if (projectBidToUpdate == null) {
             throw new ApiExcpection("Project bid not found");
@@ -54,7 +45,6 @@ public class ProjectBidService {
         projectBidToUpdate.setDescription(projectBid.getDescription());
         projectBidToUpdate.setTitle(projectBid.getTitle());
         projectBidToUpdate.setLocation(projectBid.getLocation());
-        projectBidToUpdate.setStatus(projectBid.getStatus());
         projectBidRepository.save(projectBidToUpdate);
     }
 
@@ -69,7 +59,6 @@ public class ProjectBidService {
         projectBidRepository.delete(projectBidToDelete);
     }
 
-
     public List<ProjectBid> getProjectBidByCompanyId(Integer companyId) {
         Company company = companyRepository.findCompanyById(companyId);
         if (company == null) {
@@ -78,8 +67,11 @@ public class ProjectBidService {
         return projectBidRepository.getProjectBidByCompanyId(companyId);
     }
 
-
     public List<ProjectBid> getProjectByStatus(String status) {
-        return projectBidRepository.findProjectBidByStatus(status);
+        List<ProjectBid> projectBids =projectBidRepository.findProjectBidByStatus(status);
+        if (projectBids.isEmpty()) {
+            throw new ApiExcpection("Project bid not found");
+        }
+        return projectBids;
     }
 }
