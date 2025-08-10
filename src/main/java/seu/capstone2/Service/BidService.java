@@ -62,6 +62,9 @@ public class BidService {
         if (oldBid == null) {
             throw new ApiExcpection("Bid not found");
         }
+        if (!oldBid.getStatus().equals("PENDING")) {
+            throw new ApiExcpection("You can't update a bid with status " + oldBid.getStatus());
+        }
         oldBid.setAmount(bid.getAmount());
         oldBid.setDescription(bid.getDescription());
         oldBid.setDurationInDays(bid.getDurationInDays());

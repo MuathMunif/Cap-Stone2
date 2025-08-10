@@ -48,7 +48,6 @@ public class BidController {
         bidService.deleteBid(id);
         return ResponseEntity.status(200).body(new ApiResponse("bid deleted successfully"));
     }
-    // CRUD done
 
 
 
@@ -87,7 +86,7 @@ public class BidController {
     }
 
 
-    //Extra and test
+
     @PutMapping("/accept-email/{bidId}/{actingUserId}")
     public ResponseEntity<?> acceptAndEmailed(@PathVariable Integer bidId,@PathVariable Integer actingUserId) {
         bidService.acceptBidAndEmail(bidId, actingUserId);

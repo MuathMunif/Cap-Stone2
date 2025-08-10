@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.time.LocalDate;
@@ -54,7 +55,8 @@ public class Bid {
     @Column(columnDefinition = "varchar(10) not null")
     private String status = "PENDING";
 
-    @NotNull(message = "submissionDate must be not null")
+
     @Column(columnDefinition = "date")
+    @CreationTimestamp
     private LocalDate submissionDate;
 }

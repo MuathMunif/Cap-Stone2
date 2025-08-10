@@ -15,4 +15,9 @@ public interface ProjectBidRepository extends JpaRepository<ProjectBid, Integer>
     @Query("select c FROM ProjectBid c where c.companyId = ?1")
     List<ProjectBid> getProjectBidByCompanyId(Integer companyId);
 
+    List<ProjectBid> findProjectBidByStatus(String status);
+
+
+    boolean existsByCompanyIdAndStatus(Integer companyId, String status);
+
 }

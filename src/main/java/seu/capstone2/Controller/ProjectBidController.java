@@ -52,4 +52,10 @@ public class ProjectBidController {
         return ResponseEntity.status(200).body(projectBidService.getProjectBidByCompanyId(companyId));
     }
 
+
+    @GetMapping("/get-project-by-status/{status}")
+    public ResponseEntity<?> getProjectByStatus(@PathVariable String status) {
+        return ResponseEntity.status(200).body(projectBidService.getProjectByStatus(status));
+    }
+
 }

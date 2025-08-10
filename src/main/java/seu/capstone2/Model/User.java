@@ -37,7 +37,7 @@ public class User {
     private String password;
 
 
-    @NotEmpty(message ="The password must be not empty")
+    @NotEmpty(message ="The role must be not empty")
     @Pattern(regexp = "OWNER|CONTRACTOR", message = "The role must be 'OWNER' Or 'CONTRACTOR'")
     private String role;
 

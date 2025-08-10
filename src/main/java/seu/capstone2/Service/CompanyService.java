@@ -6,6 +6,7 @@ import seu.capstone2.Api.ApiExcpection;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Model.User;
 import seu.capstone2.Repository.CompanyRepository;
+import seu.capstone2.Repository.ProjectBidRepository;
 import seu.capstone2.Repository.UserRepository;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class CompanyService {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
+    private final ProjectBidRepository projectBidRepository;
 
     public List<Company> findAllCompanies() {
         return companyRepository.findAll();
@@ -58,6 +60,10 @@ public class CompanyService {
         Company company = companyRepository.findCompanyById(id);
         if (company == null) {
             throw new ApiExcpection("Company not found");
+        }
+        boolean hasActiveProjects = projectBidRepository.existsByCompanyIdAndStatus(id, "AWARDED");
+        if (hasActiveProjects) {
+            throw new ApiExcpection("you can't delete a project because you have active projects");
         }
         companyRepository.delete(company);
     }

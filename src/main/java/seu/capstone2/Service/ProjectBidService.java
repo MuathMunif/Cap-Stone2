@@ -10,6 +10,7 @@ import seu.capstone2.Repository.CompanyRepository;
 import seu.capstone2.Repository.ProjectBidRepository;
 import seu.capstone2.Repository.UserRepository;
 
+
 import java.util.List;
 
 @Service
@@ -45,6 +46,9 @@ public class ProjectBidService {
         if (projectBidToUpdate == null) {
             throw new ApiExcpection("Project bid not found");
         }
+        if (!projectBidToUpdate.getStatus().equals("OPEN")) {
+            throw new ApiExcpection("You can't update project bids with status" + projectBidToUpdate.getStatus());
+        }
         projectBidToUpdate.setBudget(projectBid.getBudget());
         projectBidToUpdate.setDeadline(projectBid.getDeadline());
         projectBidToUpdate.setDescription(projectBid.getDescription());
@@ -59,15 +63,23 @@ public class ProjectBidService {
         if (projectBidToDelete == null) {
             throw new ApiExcpection("Project bid not found");
         }
+        if (!projectBidToDelete.getStatus().equals("OPEN")) {
+            throw new ApiExcpection("You can't delete project bid with status" + projectBidToDelete.getStatus());
+        }
         projectBidRepository.delete(projectBidToDelete);
     }
 
-    //Extra
+
     public List<ProjectBid> getProjectBidByCompanyId(Integer companyId) {
         Company company = companyRepository.findCompanyById(companyId);
         if (company == null) {
             throw new ApiExcpection("Company not found");
         }
         return projectBidRepository.getProjectBidByCompanyId(companyId);
+    }
+
+
+    public List<ProjectBid> getProjectByStatus(String status) {
+        return projectBidRepository.findProjectBidByStatus(status);
     }
 }
