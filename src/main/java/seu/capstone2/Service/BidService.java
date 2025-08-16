@@ -2,7 +2,7 @@ package seu.capstone2.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import seu.capstone2.Api.ApiExcpection;
+import seu.capstone2.Api.ApiException;
 import seu.capstone2.Model.*;
 import seu.capstone2.Repository.*;
 
@@ -27,20 +27,20 @@ public class BidService {
         Contractor contractor = contractorRepository.findContractorById(bid.getContractorId());
 
         if (projectBid == null) {
-            throw new ApiExcpection("Project bid not found");
+            throw new ApiException("Project bid not found");
         }
         if (contractor == null) {
-            throw new ApiExcpection("Contractor not found");
+            throw new ApiException("Contractor not found");
         }
         if (bidRepository.existsByProjectBidIdAndContractorId(bid.getProjectBidId(), bid.getContractorId())) {
-            throw new ApiExcpection("You already submitted a bid for this ProjectBid");
+            throw new ApiException("You already submitted a bid for this ProjectBid");
         }
 
         if (!"OPEN".equals(projectBid.getStatus())) {
-            throw new ApiExcpection("ProjectBid is not OPEN");
+            throw new ApiException("ProjectBid is not OPEN");
         }
         if (projectBid.getDeadline().isBefore(java.time.LocalDate.now())) {
-            throw new ApiExcpection("ProjectBid deadline has passed");
+            throw new ApiException("ProjectBid deadline has passed");
         }
         bid.setStatus("PENDING");
         bidRepository.save(bid);
@@ -49,10 +49,10 @@ public class BidService {
     public void updateBid(Integer id , Bid bid) {
         Bid oldBid = bidRepository.findBidById(id);
         if (oldBid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         if (!oldBid.getStatus().equals("PENDING")) {
-            throw new ApiExcpection("You can't update a bid with status " + oldBid.getStatus());
+            throw new ApiException("You can't update a bid with status " + oldBid.getStatus());
         }
         oldBid.setAmount(bid.getAmount());
         oldBid.setDescription(bid.getDescription());
@@ -64,10 +64,10 @@ public class BidService {
     public void deleteBid(Integer id) {
         Bid oldBid = bidRepository.findBidById(id);
         if (oldBid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         if (!"PENDING".equals(oldBid.getStatus())) {
-            throw new ApiExcpection("Only bids with status 'PENDING' can be deleted");
+            throw new ApiException("Only bids with status 'PENDING' can be deleted");
         }
         bidRepository.delete(oldBid);
     }
@@ -76,11 +76,11 @@ public class BidService {
     public List<Bid> getBidsByContractorId(Integer contractorId) {
         Contractor contractor = contractorRepository.findContractorById(contractorId);
         if (contractor == null) {
-            throw new ApiExcpection("Contractor not found");
+            throw new ApiException("Contractor not found");
         }
         List<Bid> bids = bidRepository.findBidByContractorId(contractorId);
         if (bids.isEmpty()) {
-            throw new ApiExcpection("No bids found");
+            throw new ApiException("No bids found");
         }
         return bids;
     }
@@ -89,11 +89,11 @@ public class BidService {
     public List<Bid> getAllBidsByProjectBidId(Integer projectBidId) {
         ProjectBid projectBid = projectBidRepository.findProjectBidById(projectBidId);
         if (projectBid == null) {
-            throw new ApiExcpection("Project bid not found");
+            throw new ApiException("Project bid not found");
         }
         List<Bid> bids = bidRepository.findBidByProjectBidId(projectBidId);
         if (bids.isEmpty()) {
-            throw new ApiExcpection("No bids found");
+            throw new ApiException("No bids found");
         }
         return bids;
     }
@@ -101,11 +101,11 @@ public class BidService {
     // find All bids by status
     public List<Bid> getAllBidsByStatus(String status) {
         if (!status.matches("PENDING|ACCEPTED|REJECTED")) {
-            throw new ApiExcpection("Invalid status");
+            throw new ApiException("Invalid status");
         }
         List<Bid> bids = bidRepository.findBidByStatusContains(status);
         if (bids.isEmpty()) {
-            throw new ApiExcpection("No bids found for status: " + status);
+            throw new ApiException("No bids found for status: " + status);
         }
         return bids;
     }
@@ -114,24 +114,24 @@ public class BidService {
     public void acceptBid(Integer bidId , Integer actingCompanyId) {
         Bid bid = bidRepository.findBidById(bidId);
         if(bid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         ProjectBid projectBid = projectBidRepository.findProjectBidById(bid.getProjectBidId());
         if (projectBid == null) {
-            throw new ApiExcpection("Project bid not found");
+            throw new ApiException("Project bid not found");
         }
         if (!projectBid.getCompanyId().equals(actingCompanyId)) {
-            throw new ApiExcpection("You are not authorized to accept this bid");
+            throw new ApiException("You are not authorized to accept this bid");
         }
         if (projectBid.getDeadline().isBefore(java.time.LocalDate.now())) {
             projectBid.setStatus("CLOSED"); // todo check
-            throw new ApiExcpection("ProjectBid deadline has passed");
+            throw new ApiException("ProjectBid deadline has passed");
         }
         if (!"OPEN".equals(projectBid.getStatus())) {
-            throw new ApiExcpection("ProjectBid is not OPEN");
+            throw new ApiException("ProjectBid is not OPEN");
         }
         if (!"PENDING".equals(bid.getStatus())) {
-            throw new ApiExcpection("Bid is not PENDING");
+            throw new ApiException("Bid is not PENDING");
         }
         bid.setStatus("ACCEPTED");
         bidRepository.save(bid);
@@ -151,17 +151,17 @@ public class BidService {
     public void rejectBid(Integer bidId , Integer actingCompanyId) {
         Bid bid = bidRepository.findBidById(bidId);
         if(bid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         ProjectBid projectBid = projectBidRepository.findProjectBidById(bid.getProjectBidId());
         if (projectBid == null) {
-            throw new ApiExcpection("Project bid not found");
+            throw new ApiException("Project bid not found");
         }
         if (!projectBid.getCompanyId().equals(actingCompanyId)) {
-            throw new ApiExcpection("You are not authorized to reject this bid");
+            throw new ApiException("You are not authorized to reject this bid");
         }
         if (!"PENDING".equals(bid.getStatus())) {
-            throw new ApiExcpection("ProjectBid is not PENDING");
+            throw new ApiException("ProjectBid is not PENDING");
         }
         bid.setStatus("REJECTED");
         bidRepository.save(bid);
@@ -170,7 +170,7 @@ public class BidService {
     public List<Bid> getBidsByProjectBidIdAndStatus(Integer projectBidId , String status) {
         List<Bid> bids = bidRepository.findBidByProjectBidIdAndStatusContains(projectBidId, status);
         if (bids.isEmpty()) {
-            throw new ApiExcpection("No bids found");
+            throw new ApiException("No bids found");
         }
         return bids;
     }
@@ -180,11 +180,11 @@ public class BidService {
         acceptBid(bidId, actingCompanyId);
         Bid bid = bidRepository.findBidById(bidId);
         if (bid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         Contractor contractor = contractorRepository.findContractorById(bid.getContractorId());
         if (contractor == null) {
-            throw new ApiExcpection("Contractor not found");
+            throw new ApiException("Contractor not found");
         }
         contractEmailService.emailContractPdf(bidId, contractor.getEmail());
     }

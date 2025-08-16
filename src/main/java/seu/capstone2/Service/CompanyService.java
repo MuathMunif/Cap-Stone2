@@ -2,7 +2,7 @@ package seu.capstone2.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import seu.capstone2.Api.ApiExcpection;
+import seu.capstone2.Api.ApiException;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Repository.CompanyRepository;
 import seu.capstone2.Repository.ProjectBidRepository;
@@ -31,7 +31,7 @@ public class CompanyService {
     public void updateCompany(Integer id, Company company) {
         Company old = companyRepository.findCompanyById(id);
         if (old == null) {
-            throw new ApiExcpection("Company not found");
+            throw new ApiException("Company not found");
         }
         old.setName(company.getName());
         old.setCity(company.getCity());
@@ -43,11 +43,11 @@ public class CompanyService {
     public void deleteCompany(Integer id) {
         Company company = companyRepository.findCompanyById(id);
         if (company == null) {
-            throw new ApiExcpection("Company not found");
+            throw new ApiException("Company not found");
         }
         boolean hasActiveProjects = projectBidRepository.existsByCompanyIdAndStatus(id,"AWARDED");
         if (hasActiveProjects) {
-            throw new ApiExcpection("Cannot delete a company with active projects");
+            throw new ApiException("Cannot delete a company with active projects");
         }
 
         companyRepository.delete(company);

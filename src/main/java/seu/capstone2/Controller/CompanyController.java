@@ -24,19 +24,13 @@ public class CompanyController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCompany(@Valid @RequestBody Company company , Errors errors){
-        if(errors.hasErrors()){
-            return ResponseEntity.status(400).body(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<?> addCompany(@Valid @RequestBody Company company){
         companyService.addCompany(company);
         return ResponseEntity.status(200).body(new ApiResponse("Company added successfully"));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateCompany(@PathVariable int id ,@Valid @RequestBody Company company, Errors errors){
-        if(errors.hasErrors()){
-            return ResponseEntity.status(400).body(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage());
-        }
+    public ResponseEntity<?> updateCompany(@PathVariable int id ,@Valid @RequestBody Company company){
         companyService.updateCompany(id, company);
         return ResponseEntity.status(200).body(new ApiResponse("Company updated successfully"));
     }

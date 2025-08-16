@@ -7,7 +7,7 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import seu.capstone2.Api.ApiExcpection;
+import seu.capstone2.Api.ApiException;
 import seu.capstone2.Model.Bid;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Model.ProjectBid;
@@ -31,15 +31,15 @@ public class ContractService {
 
     public byte[] generateContractPdf(Integer acceptedBidId) {
         Bid bid = bidRepository.findBidById(acceptedBidId);
-        if (bid == null) throw new ApiExcpection("Bid not found");
-        if (!"ACCEPTED".equals(bid.getStatus())) throw new ApiExcpection("Bid is not ACCEPTED");
+        if (bid == null) throw new ApiException("Bid not found");
+        if (!"ACCEPTED".equals(bid.getStatus())) throw new ApiException("Bid is not ACCEPTED");
 
         ProjectBid pb = projectBidRepository.findProjectBidById(bid.getProjectBidId());
-        if (pb == null) throw new ApiExcpection("ProjectBid not found");
+        if (pb == null) throw new ApiException("ProjectBid not found");
 
         Company owner = companyRepository.findCompanyById(pb.getCompanyId());
         Contractor contractor = contractorRepository.findContractorById(bid.getContractorId());
-        if (owner == null || contractor == null) throw new ApiExcpection("Company/Contractor data missing");
+        if (owner == null || contractor == null) throw new ApiException("Company/Contractor data missing");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Document doc = new Document(PageSize.A4, 36, 36, 36, 36);
@@ -96,7 +96,7 @@ public class ContractService {
 
             doc.close();
         } catch (Exception e) {
-            throw new ApiExcpection("Error generating contract PDF: " + e.getMessage());
+            throw new ApiException("Error generating contract PDF: " + e.getMessage());
         }
 
         return baos.toByteArray();

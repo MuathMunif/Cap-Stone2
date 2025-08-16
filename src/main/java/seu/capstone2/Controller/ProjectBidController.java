@@ -23,19 +23,13 @@ public class ProjectBidController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addProjectBid(@Valid @RequestBody ProjectBid projectBid , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> addProjectBid(@Valid @RequestBody ProjectBid projectBid) {
         projectBidService.addProjectBid(projectBid);
         return ResponseEntity.status(200).body(new ApiResponse("Project bid added successfully"));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProjectBid(@PathVariable Integer id ,@Valid @RequestBody ProjectBid projectBid , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> updateProjectBid(@PathVariable Integer id ,@Valid @RequestBody ProjectBid projectBid) {
         projectBidService.updateProjectBid(id, projectBid);
         return ResponseEntity.status(200).body(new ApiResponse("Project bid updated successfully"));
     }

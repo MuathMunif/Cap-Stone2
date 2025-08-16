@@ -6,7 +6,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import seu.capstone2.Api.ApiExcpection;
+import seu.capstone2.Api.ApiException;
 import seu.capstone2.Model.Bid;
 import seu.capstone2.Model.Company;
 import seu.capstone2.Model.ProjectBid;
@@ -27,15 +27,15 @@ public class ContractEmailService {
     public void emailContractPdf(Integer bidId, String toEmail) {
         Bid bid = bidRepository.findBidById(bidId);
         if (bid == null) {
-            throw new ApiExcpection("Bid not found");
+            throw new ApiException("Bid not found");
         }
         ProjectBid pb = projectBidRepository.findProjectBidById(bid.getProjectBidId());
-        if (pb == null) throw new ApiExcpection("ProjectBid not found");
+        if (pb == null) throw new ApiException("ProjectBid not found");
 
         Company owner = companyRepository.findCompanyById(pb.getCompanyId());
-        if (owner == null) throw new ApiExcpection("Owner company not found");
+        if (owner == null) throw new ApiException("Owner company not found");
         if (owner.getEmail() == null || owner.getEmail().isBlank()) {
-            throw new ApiExcpection("Owner company email not found");
+            throw new ApiException("Owner company email not found");
         }
 
 
@@ -53,7 +53,7 @@ public class ContractEmailService {
 
             mailSender.send(message);
         } catch (Exception e) {
-            throw new ApiExcpection("Failed to send email: " + e.getMessage());
+            throw new ApiException("Failed to send email: " + e.getMessage());
         }
     }
 }

@@ -24,19 +24,13 @@ public class ContractorController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addContractor(@Valid @RequestBody Contractor contractor , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> addContractor(@Valid @RequestBody Contractor contractor) {
         contractorService.addContractor(contractor);
         return ResponseEntity.status(200).body(new ApiResponse("Contractor added successfully"));
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> updateContractor(@PathVariable Integer id, @Valid@RequestBody Contractor contractor , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> updateContractor(@PathVariable Integer id, @Valid@RequestBody Contractor contractor) {
         contractorService.updateContractor(id, contractor);
         return ResponseEntity.status(200).body(new ApiResponse("Contractor updated successfully"));
     }

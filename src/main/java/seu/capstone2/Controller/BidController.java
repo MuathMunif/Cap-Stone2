@@ -25,19 +25,13 @@ public class BidController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addBid(@Valid @RequestBody Bid bid , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> addBid(@Valid @RequestBody Bid bid) {
         bidService.addBid(bid);
         return ResponseEntity.status(201).body(new ApiResponse("bid added successfully"));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateBid(@PathVariable Integer id ,@Valid @RequestBody Bid bid , Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(new ApiResponse(Objects.requireNonNull(errors.getFieldError()).getDefaultMessage()));
-        }
+    public ResponseEntity<?> updateBid(@PathVariable Integer id ,@Valid @RequestBody Bid bid) {
         bidService.updateBid(id,bid);
         return ResponseEntity.status(201).body(new ApiResponse("bid updated successfully"));
     }

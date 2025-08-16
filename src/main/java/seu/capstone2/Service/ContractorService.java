@@ -2,7 +2,7 @@ package seu.capstone2.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import seu.capstone2.Api.ApiExcpection;
+import seu.capstone2.Api.ApiException;
 import seu.capstone2.Model.Contractor;
 import seu.capstone2.Repository.BidRepository;
 import seu.capstone2.Repository.ContractorRepository;
@@ -32,7 +32,7 @@ public class ContractorService {
     public void updateContractor(Integer id, Contractor contractor) {
         Contractor old = contractorRepository.findContractorById(id);
         if (old == null) {
-            throw new ApiExcpection("Contractor not found");
+            throw new ApiException("Contractor not found");
         }
         old.setName(contractor.getName());
         old.setCity(contractor.getCity());
@@ -47,12 +47,12 @@ public class ContractorService {
     public void deleteContractor(Integer id) {
         Contractor contractor = contractorRepository.findContractorById(id);
         if (contractor == null) {
-            throw new ApiExcpection("Contractor not found");
+            throw new ApiException("Contractor not found");
         }
         boolean hasActiveBids = bidRepository.existsByContractorIdAndStatus(id,"ACCEPTED");
 
         if (hasActiveBids) {
-            throw new ApiExcpection("Cannot delete contractor with active bids");
+            throw new ApiException("Cannot delete contractor with active bids");
         }
         contractorRepository.delete(contractor);
     }
